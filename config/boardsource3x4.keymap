@@ -1,44 +1,43 @@
-/*
- * Copyright (c) 2020 The ZMK Contributors
- *
- * SPDX-License-Identifier: MIT
- */
+/dts-v1/;
+/plugin/;
 
-#include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-
-&bt {
-    status = "okay";  // Enable Bluetooth
-    name = "Goga_numpad";  // Optional: Set Bluetooth device name
-    advertise = "1";  // Enable Bluetooth advertising
-};
+#include <dt-bindings/zmk/ext_power.h>
 
 / {
-    keymap {
-        compatible = "zmk,keymap";
+    chosen {
+        zmk,keyboard = &macropad;
+    };
 
-        // Default layer for numpad
-        default_layer {
+    macropad {
+        compatible = "zmk,keyboard";
+        
+        matrix = <&kscan0>;
+
+        keymap {
+            compatible = "zmk,keymap";
+            label = "Default";
+
             bindings = <
-                &kp LPAR    &kp RPAR    &kp C_CIRC    &kp KPAST
-                &kp N7      &kp N8      &kp N9        &kp KPSLSH
-                &kp N4      &kp N5      &kp N6        &kp KPMINS
-                &kp N1      &kp N2      &kp N3        &kp KPPLUS
-                &kp N0      &kp KDOT   &kp KPEQL     &kp KPENT
-                &mo 1       // Momentary layer toggle for Bluetooth control (layer 1)
+                &kp LEFT_PAREN   &kp RIGHT_PAREN   &kp CIRCUMFLEX   &kp KP_ASTERISK
+                &kp KP_7         &kp KP_8         &kp KP_9         &kp KP_SLASH
+                &kp KP_4         &kp KP_5         &kp KP_6         &kp KP_MINUS
+                &kp KP_1         &kp KP_2         &kp KP_3         &kp KP_PLUS
+                &kp KP_0         &kp KP_DOT       &kp KP_EQUAL     &kp KP_ENTER
             >;
         };
+    };
 
-        // Layer 1 for Bluetooth control
-        layer_1 {
-            bindings = <
-                &bt BT_CLR   &bt BT_RESET   &bt BT_TOG   &trans
-                &bt BT_SEL 0 &bt BT_SEL 1   &bt BT_SEL 2 &trans
-                &bt BT_SEL 3 &bt BT_SEL 4   &trans       &trans
-                &trans       &trans         &trans       &trans
-                &trans       &trans         &trans       &trans
-            >;
-        };
+    &kscan0 {
+        matrix-row-gpios = <&pro_micro 15 GPIO_ACTIVE_LOW>,
+                           <&pro_micro 18 GPIO_ACTIVE_LOW>,
+                           <&pro_micro 19 GPIO_ACTIVE_LOW>,
+                           <&pro_micro 20 GPIO_ACTIVE_LOW>,
+                           <&pro_micro 21 GPIO_ACTIVE_LOW>;
+        matrix-column-gpios = <&pro_micro 1 GPIO_ACTIVE_LOW>,
+                              <&pro_micro 0 GPIO_ACTIVE_LOW>,
+                              <&pro_micro 8 GPIO_ACTIVE_LOW>,
+                              <&pro_micro 9 GPIO_ACTIVE_LOW>;
     };
 };
